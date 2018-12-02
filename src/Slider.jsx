@@ -12,20 +12,19 @@ class Slider extends React.Component {
     value: PropTypes.number,
     disabled: PropTypes.bool,
     autoFocus: PropTypes.bool,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.number
   };
 
   constructor(props) {
     super(props);
 
-    const defaultValue = props.defaultValue !== undefined ?
-      props.defaultValue : props.min;
-    const value = props.value !== undefined ?
-      props.value : defaultValue;
+    const defaultValue =
+      props.defaultValue !== undefined ? props.defaultValue : props.min;
+    const value = props.value !== undefined ? props.value : defaultValue;
 
     this.state = {
       value: this.trimAlignValue(value),
-      dragging: false,
+      dragging: false
     };
     if (process.env.NODE_ENV !== 'production') {
       warning(
@@ -47,11 +46,11 @@ class Slider extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!('value' in nextProps || 'min' in nextProps || 'max' in nextProps)) return;
+    if (!('value' in nextProps || 'min' in nextProps || 'max' in nextProps))
+      return;
 
     const prevValue = this.state.value;
-    const value = nextProps.value !== undefined ?
-      nextProps.value : prevValue;
+    const value = nextProps.value !== undefined ? nextProps.value : prevValue;
     const nextValue = this.trimAlignValue(value, nextProps);
     if (nextValue === prevValue) return;
 
@@ -73,6 +72,9 @@ class Slider extends React.Component {
   }
 
   onStart(position) {
+    if (this.props.onDragStart) {
+      this.props.onDragStart();
+    }
     this.setState({ dragging: true });
     const props = this.props;
     const prevValue = this.getValue();
@@ -90,10 +92,13 @@ class Slider extends React.Component {
   }
 
   onEnd = () => {
+    if (this.props.onDragEnd) {
+      this.props.onDragEnd();
+    }
     this.setState({ dragging: false });
     this.removeDocumentEvents();
     this.props.onAfterChange(this.getValue());
-  }
+  };
 
   onMove(e, position) {
     utils.pauseEvent(e);
@@ -149,7 +154,7 @@ class Slider extends React.Component {
       tabIndex,
       min,
       max,
-      handle: handleGenerator,
+      handle: handleGenerator
     } = this.props;
     const { value, dragging } = this.state;
     const offset = this.calcOffset(value);
@@ -166,7 +171,7 @@ class Slider extends React.Component {
       index: 0,
       tabIndex,
       style: handleStyle[0] || handleStyle,
-      ref: h => this.saveHandle(0, h),
+      ref: h => this.saveHandle(0, h)
     });
 
     const _trackStyle = trackStyle[0] || trackStyle;
@@ -179,7 +184,7 @@ class Slider extends React.Component {
         length={offset}
         style={{
           ...minimumTrackStyle,
-          ..._trackStyle,
+          ..._trackStyle
         }}
       />
     );
